@@ -4,6 +4,8 @@ import mongoose, { Schema } from 'mongoose';
 import fs from 'fs'
 import { simpleParser } from 'mailparser'
 import puppeteer from 'puppeteer';
+import path from "path"
+const __dirname = path.resolve();
 configDotenv()
 
 const imap = new Imap({
@@ -72,7 +74,7 @@ async function main() {
                             const page = await browser.newPage();
                             await page.setContent(html)
                             const imageBuffer = await page.screenshot({ encoding: 'binary' });
-                            fs.writeFileSync(`${messageId.replace( new RegExp("[^a-zA-Z0-9]","gm"),"+")}.png`, imageBuffer, 'binary');
+                            fs.writeFileSync(__dirname + `/snapshots/${messageId.replace( new RegExp("[^a-zA-Z0-9]","gm"),"+")}.png`, imageBuffer, 'binary');
                             await browser.close();
 
                             // To-do
